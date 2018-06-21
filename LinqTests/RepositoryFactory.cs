@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace LinqTests
 {
@@ -41,5 +43,76 @@ namespace LinqTests
                 new Employee {Name = "Joey", Role = RoleType.Engineer, MonthSalary = 250, Age = 40, WorkingYear = 2.6},
             };
         }
+
+
+        public static IEnumerable<ColorBall> GetBalls()
+        {
+            return new List<ColorBall>
+            {
+                new ColorBall {Color = Color.Blue, Size = "L", Prize = 200},
+                new ColorBall {Color = Color.Purple, Size = "L", Prize = 350},
+                new ColorBall {Color = Color.Yellow, Size = "S", Prize = 300},
+                new ColorBall {Color = Color.Purple, Size = "S", Prize = 500},
+                new ColorBall {Color = Color.Purple, Size = "L", Prize = 450},
+                new ColorBall {Color = Color.Yellow, Size = "M", Prize = 500},
+                new ColorBall {Color = Color.Yellow, Size = "M", Prize = 500},
+            };
+        }
+
+        public static IEnumerable<ColorBall> GetAnotherBalls()
+        {
+            return new List<ColorBall>
+            {
+                new ColorBall {Color = Color.Blue, Size = "L", Prize = 200},
+                new ColorBall {Color = Color.Purple, Size = "L", Prize = 350},
+                new ColorBall {Color = Color.Yellow, Size = "S", Prize = 300},
+                new ColorBall {Color = Color.Purple, Size = "S", Prize = 500},
+                new ColorBall {Color = Color.Purple, Size = "L", Prize = 450},
+                new ColorBall {Color = Color.Yellow, Size = "M", Prize = 500},
+            };
+        }
+
+        public static IEnumerable<ColorBall> GetEltonBalls()
+        {
+            return new List<ColorBall>
+            {
+                new ColorBall {Color = Color.Blue, Size = "L", Prize = 200},
+                new ColorBall {Color = Color.Purple, Size = "L", Prize = 350},
+                new ColorBall {Color = Color.Yellow, Size = "S", Prize = 300},
+                new ColorBall {Color = Color.Purple, Size = "S", Prize = 500},
+                new ColorBall {Color = Color.Purple, Size = "L", Prize = 450},
+                new ColorBall {Color = Color.Yellow, Size = "M", Prize = 600},
+            };
+        }
+    }
+
+    internal enum Color
+    {
+        Purple,
+        Blue,
+        Yellow,
+        Green
+    }
+
+    internal class ColorBall
+    {
+        public Color Color { get; set; }
+        public string Size { get; set; }
+        public int Prize { get; set; }
+    }
+
+    public interface IOrderModel
+    {
+        void Delete(Func<Order, bool> func);
+    }
+
+    public class Order
+    {
+        public Customer Customer { get; set; }
+    }
+
+    public class Customer
+    {
+        public int Age { get; set; }
     }
 }

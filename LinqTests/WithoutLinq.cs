@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using LinqTests;
 
@@ -116,15 +117,155 @@ namespace JoeyIsFat
                 {
                     skipCounter++;
                 }
-                //if (predicate(enumerator.Current))
-                //{
-                //}
-
-                //else
-                //{
-                //    yield return enumerator.Current;
-                //}
             }
+        }
+
+        public static bool JoeyAny<TSource>(this IEnumerable<TSource> source)
+        {
+            return source.GetEnumerator().MoveNext();
+        }
+
+        public static bool JoeyAny<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
+        {
+            var enumerator = source.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                if (predicate(enumerator.Current))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+
+            foreach (var employee in source)
+            {
+                if (predicate(employee))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static bool JoeyAll<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
+        {
+            //return employees.All(e => e.MonthSalary > 200);
+            var enumerator = source.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                if (!predicate(enumerator.Current))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public static TSource JoeyFirstOrDefault<TSource>(this IEnumerable<TSource> source,
+            Func<TSource, bool> predicate)
+        {
+            var enumerator = source.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                if (predicate(enumerator.Current))
+                {
+                    return enumerator.Current;
+                }
+            }
+
+            return default(TSource);
+        }
+
+        public static TSource EltonFirst<TSource>(this IEnumerable<TSource> source, Func<TSource, bool> predicate)
+        {
+            var enumerator = source.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                if (predicate(enumerator.Current))
+                {
+                    return enumerator.Current;
+                }
+            }
+
+            throw new InvalidOperationException();
+        }
+
+
+        public static TSource JasonFirstOrDefault<TSource>(this IEnumerable<TSource> source,
+            Func<TSource, bool> predicate, TSource item)
+        {
+            var enumerator = source.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                if (predicate(enumerator.Current))
+                {
+                    return enumerator.Current;
+                }
+            }
+
+            return item;
+        }
+
+        public static TSource SamSingle<TSource>(this IEnumerable<TSource> source)
+        {
+            var enumerator = source.GetEnumerator();
+            if (enumerator.MoveNext())
+            {
+                var result = enumerator.Current;
+                if (!enumerator.MoveNext())
+                {
+                    return result;
+                }
+            }
+
+            throw new InvalidOperationException();
+        }
+
+        public static TSource JoeySingle<TSource>(this IEnumerable<TSource> employees, Func<TSource, bool> predicate)
+        {
+            var enumerator = employees.GetEnumerator();
+            var isMatch = false;
+            var singleItem = default(TSource);
+            while (enumerator.MoveNext())
+            {
+                if (predicate(enumerator.Current))
+                {
+                    if (isMatch)
+                    {
+                        throw new InvalidOperationException();
+                    }
+
+                    isMatch = true;
+                    singleItem = enumerator.Current;
+                }
+            }
+
+            if (!isMatch)
+            {
+                throw new InvalidOperationException();
+            }
+
+            return singleItem;
+        }
+
+        public static IEnumerable<Employee> luluDefaultEmpty(this IEnumerable<Employee> source)
+        {
+            var enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext())
+            {
+                yield return new Employee() { Name = "Lulu" };
+                yield break;
+            }
+
+            yield return enumerator.Current;
+            while (enumerator.MoveNext())
+            {
+                yield return enumerator.Current;
+            }
+
         }
     }
 }
